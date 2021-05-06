@@ -1,0 +1,51 @@
+#include "mbed.h"
+#include "rtos.h"
+
+typedef struct{uint32_t led_state; //고정길이 데이터 형식 
+//이용
+    } 
+    message_t;  //struct variable
+    
+    MemoryPool<message_t,16>mpool;  //고정된 크기의 메모리풀 
+    //정의 및 관리
+    Queue<message_t,16>queue;
+    Thread t1;
+    Serial pc(SERIAL_TX,SERIAL_RX);
+    InterruptIn button(PF_4);
+    DigitalOut led(PC_8);
+    volatile uint32_t led_state = 0;
+void buttonPressed(void){
+       led_state = (led_state==0)?1:0;
+       
+       message_t*message = mpool.alloc();
+       message ->led_state = led_state;
+       queue.put(message);
+        
+}
+
+int main(){
+    pc.baud(9600);
+    
+    button.rise(buttonPressed);
+    
+   
+    while(true){
+        osEvent evt = queue.get();
+        if(evt.status==osEventMessage){
+            message_t*message = (message_t*)evt.value.p;
+            
+            uint32_t led_state = message ->led_state;
+            pc.printf("Read Data %s\n\r",
+            (led_state == 0)?"LOW":"HIGH");
+            
+            led= led_state;
+            
+            mpool.free(message);    
+            
+        }
+    
+        
+    }
+        
+}        
+        

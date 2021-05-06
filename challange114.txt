@@ -1,0 +1,46 @@
+#include "mbed.h"
+#include "rtos.h"
+
+  Serial pc(SERIAL_TX,SERIAL_RX);
+  
+  PwmOut servo(PC_8);
+  
+  int main(void){
+       pc.baud(9600);
+       
+       servo.period_us(20000);
+      servo.pulsewidth_us(600);
+        wait(1);
+       
+       while(true){
+           if(pc.readable()){
+               
+                 char userInput = pc.getc();
+                    if(userInput=='q'){
+                           pc.printf("%c",userInput);
+                        
+                         servo.pulsewidth_us(600);
+                            wait(1);
+                       }
+      
+                   else if(userInput=='w'){
+                           pc.printf("%c",userInput);
+                      
+                         servo.pulsewidth_us(1500);
+                            wait(1);
+                         }
+          
+                    else if(userInput=='e'){
+                           pc.printf("%c",userInput);
+                         
+                         servo.pulsewidth_us(2400);
+                            wait(1);
+                         }
+                   
+                 servo.pulsewidth_us(0);    
+             }  
+      }
+    
+      
+      
+}

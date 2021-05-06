@@ -1,0 +1,40 @@
+#include "mbed.h"
+#include "rtos.h"
+
+  Serial pc(SERIAL_TX,SERIAL_RX);
+  
+  PwmOut led(PC_8);
+  int main(void){
+       pc.baud(9600);
+       
+      
+      
+     
+       
+       while(true){
+           if(pc.readable()){
+               
+                 char userInput = pc.getc();
+                    if(userInput=='0'){
+                           pc.printf("%c",userInput);
+                           led=0;
+        
+                       }
+      
+                   else if(userInput=='5'){
+                           pc.printf("%c",userInput);
+                         led=0.5;
+                         }
+          
+                    else if(userInput=='t'){
+                           pc.printf("%c",userInput);
+                         led=1;
+                         }
+      
+             }  
+      }
+    
+      
+      
+}
+ 

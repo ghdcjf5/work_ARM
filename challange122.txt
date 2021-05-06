@@ -1,0 +1,56 @@
+#include "mbed.h"
+#include "rtos.h"
+
+ 
+  
+  InterruptIn button(PF_4);
+  PwmOut led(PF_2);
+  
+  volatile int led_state =0;
+  volatile int led_state_changed = 0;
+   volatile int flag=0;
+  void buttonPressed(){
+      flag++;
+      if(flag==1){
+          
+            if(led_state==0){
+                 led_state=512;
+    
+              }
+          
+             else if(led_state == 512)led_state =1024;
+         
+              
+             
+             else led_state=0;
+      
+      
+      led_state_changed=1; 
+          
+      }
+      
+     else flag=0;
+      
+    }
+      
+  int main(void){
+      
+       button.rise(buttonPressed);
+       
+       
+       while(true){
+          if(led_state_changed){
+               led_state_changed=0;
+               led=led_state;
+               flag=0;
+          }  
+                   
+                     
+              
+      }
+    
+      
+      
+}
+    
+    

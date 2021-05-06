@@ -1,0 +1,71 @@
+#include "mbed.h"
+#include "rtos.h"
+
+Serial pc(SERIAL_TX,SERIAL_RX);
+DigitalOut led(LED1);
+PwmOut pwm_led(PC_8);
+Thread t1;
+Thread t2;
+Thread t_blink_led;
+Thread t_fading_led;
+
+void t1_main(){
+    while(true){
+        pc.printf("\tt1\n\r");
+        Thread::wait(500);
+        }
+    
+    }
+
+void t2_main(){
+    while(true){
+        pc.printf("\t\tt2\n\r");
+        Thread::wait(200);
+        }
+    
+    }
+    
+void blink_led(){
+    while(true){
+        led=1;
+        Thread::wait(500);
+         led=0;
+        Thread::wait(500);
+        }
+    
+    }
+void fading_led(){
+    while(true){
+        for(int t = 0; t<=100;t++){
+            pwm_led = t/100.0;
+            Thread::wait(10);
+            }
+        for(int t = 100; t>=0;t--){
+            pwm_led = t/100.0;
+            Thread::wait(10);
+            }    
+     }
+    
+  }  
+
+int main(){
+  
+    pc.baud(9600);
+    t1.start(t1_main);
+    t2.start(t2_main);
+    t_blink_led.start(blink_led);
+    t_fading_led.start(fading_led);
+    while(true){
+        if(pc.readable()){
+            char userInput = pc.getc();
+            
+             pc.printf("%c",userInput);
+            }
+        
+       
+        Thread::wait(100);
+        
+        }
+    
+    
+}

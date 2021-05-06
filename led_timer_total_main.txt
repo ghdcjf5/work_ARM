@@ -1,0 +1,55 @@
+Timer timer;
+DigitalOut led1(LED1);
+DigitalOut led2(LED2);
+PwmOut led(PC_8);
+
+unsigned long t2_prev = 0;
+const unsigned long t2_delay = 250;
+unsigned long t1_prev = 0;
+const unsigned long t1_delay = 500;
+unsigned int led_state1 = 0;
+unsigned int led_state2 = 0;
+unsigned int led_state3 = 0;
+unsigned long t3_prev = 0;
+const unsigned long t3_delay = 10;
+int main(){
+  
+    timer.start();
+    
+    while(true){
+        unsigned long t1_now = timer.read_ms();
+       if(t1_now-t1_prev>=t1_delay){
+           t1_prev=t1_now;
+          
+           led_state1 = (led_state1==0)?1:0;
+         
+            led1=led_state1;
+     
+        }
+        unsigned long t2_now = timer.read_ms();
+         if(t2_now-t2_prev>=t2_delay){
+           t2_prev=t2_now;
+          
+           led_state2 = (led_state2==0)?1:0;
+         
+            led2=led_state2;
+     
+        }
+         unsigned long t3_now = timer.read_ms();
+         if(t3_now-t3_prev>=t3_delay){
+           t3_prev=t3_now;
+          led_state3++;
+          if(led_state3==202){led_state3=0;
+              }
+          if(led_state3<=100){led=led_state3/100.0;
+              }
+        else if(led_state3>100){led=(200-led_state3)/100.0;
+              }
+        }
+        
+        
+        
+    }
+    
+    
+}

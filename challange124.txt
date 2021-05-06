@@ -1,0 +1,58 @@
+#include "mbed.h"
+#include "rtos.h"
+
+ 
+  
+  InterruptIn button(PF_4);
+  PwmOut servo(PF_2);
+  
+  volatile int servo_state =600;
+  volatile int servo_state_changed = 0;
+   volatile int flag=0;
+  void buttonPressed(){
+      flag++;
+      if(flag==1){
+          
+            if(servo_state==600){
+                 servo_state=1800;
+    
+              }
+          
+             else if(servo_state == 1800)servo_state =2400;
+             
+             
+             else servo_state=600;
+      
+      
+      servo_state_changed=1; 
+          
+      }
+      
+     else flag=0;
+      
+    }
+      
+  int main(void){
+      
+       button.rise(buttonPressed);
+       servo.period_us(20000);
+       
+       while(true){
+          if(servo_state_changed){
+               servo_state_changed=0;
+               flag=0;
+              
+           servo.pulsewidth_us(servo_state);
+                wait(1);
+            }
+               
+        servo.pulsewidth_us(0);        
+                   
+                     
+              
+      }
+    
+      
+      
+}
+    
